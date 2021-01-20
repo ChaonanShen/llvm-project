@@ -79,6 +79,8 @@ llvm::JITSymbolFlags::fromObjectSymbol(const object::SymbolRef &Symbol) {
     Flags |= JITSymbolFlags::Common;
   if (*SymbolFlagsOrErr & object::BasicSymbolRef::SF_Exported)
     Flags |= JITSymbolFlags::Exported;
+  if (*SymbolFlagsOrErr & object::BasicSymbolRef::SF_Indirect)
+    Flags |= JITSymbolFlags::Indirect;
 
   auto SymbolType = Symbol.getType();
   if (!SymbolType)

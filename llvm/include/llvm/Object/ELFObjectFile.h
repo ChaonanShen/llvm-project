@@ -672,6 +672,7 @@ ELFObjectFile<ELFT>::getSymbolType(DataRefImpl Symb) const {
   case ELF::STT_FILE:
     return SymbolRef::ST_File;
   case ELF::STT_FUNC:
+  case ELF::STT_GNU_IFUNC:
     return SymbolRef::ST_Function;
   case ELF::STT_OBJECT:
   case ELF::STT_COMMON:
@@ -762,6 +763,9 @@ Expected<uint32_t> ELFObjectFile<ELFT>::getSymbolFlags(DataRefImpl Sym) const {
 
   if (isExportedToOtherDSO(ESym))
     Result |= SymbolRef::SF_Exported;
+
+  if (ESym->getType() == ELF::STT_GNU_IFUNC)
+    Result |= SymbolRef::SF_Indirect;
 
   if (ESym->getVisibility() == ELF::STV_HIDDEN)
     Result |= SymbolRef::SF_Hidden;

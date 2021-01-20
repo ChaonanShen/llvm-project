@@ -85,8 +85,8 @@ public:
     Exported = 1U << 4,
     Callable = 1U << 5,
     MaterializationSideEffectsOnly = 1U << 6,
-    LLVM_MARK_AS_BITMASK_ENUM( // LargestValue =
-        MaterializationSideEffectsOnly)
+    Indirect = 1U << 7,
+    LLVM_MARK_AS_BITMASK_ENUM(/* LargestValue = */ Indirect)
   };
 
   /// Default-construct a JITSymbolFlags instance.
@@ -162,6 +162,9 @@ public:
     return (Flags & MaterializationSideEffectsOnly) ==
            MaterializationSideEffectsOnly;
   }
+
+  /// Returns true if this is an indirect symbol (e.g. IFUNC in ELF).
+  bool isIndirect() const { return (Flags & Indirect) == Indirect; }
 
   /// Get the underlying flags value as an integer.
   UnderlyingType getRawFlagsValue() const {
